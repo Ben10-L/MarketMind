@@ -10,6 +10,7 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.image.BaseMultiResolutionImage;
 import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalTime;
@@ -51,6 +52,7 @@ public final class MainWindow extends JFrame {
     public MainWindow(MarketMindController controller) {
         super("MarketMind AI | Intelligence Workspace");
         this.controller = Objects.requireNonNull(controller);
+        setIconImage(brandIcon("black", 40).getImage());
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(1100, 720));
         setSize(1290, 840);
@@ -59,6 +61,13 @@ public final class MainWindow extends JFrame {
         setVisible(false);
         installEvents();
         renderWelcome();
+    }
+
+    private static ImageIcon brandIcon(String variant, int size) {
+        String path = "/ui/marketmind-" + variant + "-";
+        Image standard = new ImageIcon(MainWindow.class.getResource(path + size + ".png")).getImage();
+        Image highResolution = new ImageIcon(MainWindow.class.getResource(path + size * 2 + ".png")).getImage();
+        return new ImageIcon(new BaseMultiResolutionImage(standard, highResolution));
     }
 
     private JPanel layoutRoot() {
@@ -94,8 +103,7 @@ public final class MainWindow extends JFrame {
         top.setOpaque(false);
         JPanel brand = new JPanel(new FlowLayout(FlowLayout.LEFT, 9, 3));
         brand.setOpaque(false);
-        JLabel mark = MarketMindTheme.text("M", 19, true, MarketMindTheme.HIGHLIGHT);
-        mark.setPreferredSize(new Dimension(25, 32));
+        JLabel mark = new JLabel(brandIcon("white", 32));
         brand.add(mark);
         brand.add(MarketMindTheme.text("MarketMind AI", 17, true, Color.WHITE));
         brand.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -318,7 +326,7 @@ public final class MainWindow extends JFrame {
         JPanel welcome = new JPanel();
         welcome.setOpaque(false);
         welcome.setLayout(new BoxLayout(welcome, BoxLayout.Y_AXIS));
-        JLabel icon = MarketMindTheme.text("M", 37, true, MarketMindTheme.ACCENT);
+        JLabel icon = new JLabel(brandIcon("white", 40));
         JLabel title = MarketMindTheme.text("What market are we exploring?", 26, true, MarketMindTheme.INK);
         JLabel sub = MarketMindTheme.text("Ask about any business idea. MarketMind will coordinate research, risks and strategy.",
                 13, false, MarketMindTheme.MUTED);
